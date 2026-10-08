@@ -2,44 +2,47 @@ const express = require('express');
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.get('/sum', (req, res) => {
+// Парсит и валидирует два числовых query-параметра `a` и `b`.
+// Возвращает { x, y } при успехе либо { error } с текстом ошибки.
+function parseOperands(req) {
   const { a, b } = req.query;
   const x = Number(a);
   const y = Number(b);
 
   if (a === undefined || b === undefined || a === '' || b === '' ||
       Number.isNaN(x) || Number.isNaN(y)) {
-    return res.status(400).json({ error: 'Parameters "a" and "b" must be numbers' });
+    return { error: 'Parameters "a" and "b" must be numbers' };
+  }
+
+  return { x, y };
+}
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+app.get('/sum', (req, res) => {
+  const { x, y, error } = parseOperands(req);
+  if (error) {
+    return res.status(400).json({ error });
   }
 
   res.json({ a: x, b: y, result: x + y });
 });
 
 app.get('/mul', (req, res) => {
-  const { a, b } = req.query;
-  const x = Number(a);
-  const y = Number(b);
-
-  if (a === undefined || b === undefined || a === '' || b === '' ||
-      Number.isNaN(x) || Number.isNaN(y)) {
-    return res.status(400).json({ error: 'Parameters "a" and "b" must be numbers' });
+  const { x, y, error } = parseOperands(req);
+  if (error) {
+    return res.status(400).json({ error });
   }
 
   res.json({ a: x, b: y, result: x * y });
 });
 
 app.get('/div', (req, res) => {
-  const { a, b } = req.query;
-  const x = Number(a);
-  const y = Number(b);
-
-  if (a === undefined || b === undefined || a === '' || b === '' ||
-      Number.isNaN(x) || Number.isNaN(y)) {
-    return res.status(400).json({ error: 'Parameters "a" and "b" must be numbers' });
+  const { x, y, error } = parseOperands(req);
+  if (error) {
+    return res.status(400).json({ error });
   }
 
   if (y === 0) {
