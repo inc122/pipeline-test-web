@@ -39,4 +39,13 @@ app.get('/mul', (req, res) => {
   res.json({ a: x, b: y, result: x * y });
 });
 
+app.get('/div', (req, res) => {
+  const { x, y, error } = parseOperands(req.query);
+  if (error) {
+    return res.status(400).json({ error });
+  }
+
+  res.json({ a: x, b: y, result: x / y });
+});
+
 module.exports = app;
