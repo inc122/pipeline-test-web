@@ -31,3 +31,24 @@ describe('GET /sum', () => {
     assert.ok(res.body.error);
   });
 });
+
+describe('GET /mul', () => {
+  it('returns the product of a and b as JSON', async () => {
+    const res = await request(app).get('/mul').query({ a: 2, b: 5 });
+    assert.equal(res.status, 200);
+    assert.match(res.headers['content-type'], /application\/json/);
+    assert.deepEqual(res.body, { a: 2, b: 5, result: 10 });
+  });
+
+  it('returns 400 when a parameter is missing', async () => {
+    const res = await request(app).get('/mul').query({ a: 1 });
+    assert.equal(res.status, 400);
+    assert.ok(res.body.error);
+  });
+
+  it('returns 400 when a parameter is not a number', async () => {
+    const res = await request(app).get('/mul').query({ a: 'foo', b: 2 });
+    assert.equal(res.status, 400);
+    assert.ok(res.body.error);
+  });
+});
