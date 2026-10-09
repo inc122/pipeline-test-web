@@ -2,6 +2,7 @@
 name: codereview
 description: Ревью незакоммиченных изменений текущего шага плана (после прохождения тестов, до коммита) на ошибки, соответствие правилам CLAUDE.md и покрытие тестами. Код не меняет — только отчёт и вердикт PASS/FAIL. Используй на каждом шаге loop и когда просят сделать code review.
 argument-hint: "[git-range, например HEAD~3..HEAD]"
+context: fork
 ---
 
 # codereview
